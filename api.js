@@ -10,9 +10,6 @@ import fs from "fs";
 dotenv.config();
 const { THIRDWEB_CLIENT_ID, LOCAL_PRIVATE_KEY } = process.env;
 
-
-console.log(process.env.THIRDWEB_CLIENT_ID);
-
 const app = express();
 app.use(express.json());
 
@@ -77,6 +74,51 @@ app.get("/retrieve/:userId", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to retrieve data" });
+    }
+});
+
+// Endpoint to clear all fitness data for a user
+app.delete("/clear/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const tx = await fitnessContract.clearUserFitnessData(userId);
+        await tx.wait();
+
+        res.json({ success: true, message: `All fitness data for user ${userId} cleared.` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to clear fitness data" });
+    }
+});
+
+// Endpoint to delete a specific entry for a user
+app.delete("/delete", async (req, res) => {
+    try {
+        const { userId, index } = req.body;
+
+        const tx = await fitnessContract.deleteFitnessData(userId, index);
+        await tx.wait();
+
+        res.json({ success: true, message: `Entry at index ${index} for user ${userId} deleted.` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to delete specific entry" });
+    }
+});
+
+// Endpoint to update a specific entry for a user
+app.put("/update", async (req, res) => {
+    try {
+        const { userId, index, newIpfsHash } = req.body;
+
+        const tx = await fitnessContract.updateFitnessData(userId, index, newIpfsHash);
+        await tx.wait();
+
+        res.json({ success: true, message: `Entry at index ${index} for user ${userId} updated.` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to update specific entry" });
     }
 });
 

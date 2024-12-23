@@ -45,3 +45,7 @@ contract FitnessDataStorage {
         return "Hello, Hardhat!";
     }
 }
+
+// Deploy with 
+// Locally: npx hardhat run scripts/Deploy.js --network localhost
+// Globally: npx hardhat run scripts/Deploy.ts --network bscTestnet 
