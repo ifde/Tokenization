@@ -1,100 +1,29 @@
 import express from "express";
-import { ethers, JsonRpcProvider } from "ethers";
+import { ethers } from "ethers";
 import { upload, download } from "thirdweb/storage";
 import { createThirdwebClient } from "thirdweb";
-import {CONTRACT_ADDRESS, CONTRACT_ABI} from "./global.ts"
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "./global.js";
+import dotenv from 'dotenv';
 import fs from "fs";
+
+
+dotenv.config();
+const { THIRDWEB_CLIENT_ID, LOCAL_PRIVATE_KEY } = process.env;
+
+
+console.log(process.env.THIRDWEB_CLIENT_ID);
 
 const app = express();
 app.use(express.json());
 
 // IPFS Client Setup
-const client = createThirdwebClient({ clientId: "3f7ea9dbfcdc8079c39087ed3a4ebfd0" });
+const client = createThirdwebClient({ clientId: THIRDWEB_CLIENT_ID });
 
 // Blockchain Setup
 const provider = new ethers.JsonRpcProvider();
-// const provider1 = new ethers.providers.JsonRpcProvider(); // local host for now
-const signer = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider);
-//const signer = await ethers.provider.getSigner()
-const contractAddress = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
-const contractABI = [
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "userId",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "ipfsHash",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "DataAdded",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "userId",
-        "type": "string"
-      }
-    ],
-    "name": "getUserFitnessData",
-    "outputs": [
-      {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "hello",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "userId",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "ipfsHash",
-        "type": "string"
-      }
-    ],
-    "name": "storeFitnessData",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
-const fitnessContract = new ethers.Contract(contractAddress, contractABI, signer);
+// A key to a local test wallet
+const signer = new ethers.Wallet(LOCAL_PRIVATE_KEY, provider);
+const fitnessContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
 // Endpoint to store JSON file and save IPFS hash in contract
 app.post("/store", async (req, res) => {

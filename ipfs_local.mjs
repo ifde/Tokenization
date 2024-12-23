@@ -189,5 +189,52 @@ getDataFromIPFS(ipfsHash);
 // In api.mjs, we create a new object to work with this contract and use a different signer for operations. 
 // (In this case, they're the same)
 
+// Changes:
+// Deploy on the ETH testnet 
+// add show_all() and delete() functions to the contract 
+// Launch the API on the website 
+// Commit to git and push to GitHub
+// Switch from using .mjs files 
+// Use data from contract (address & abi) automatically in api.mjs or better so, find a way not to use them
 
+// TypeScript and JavaScript scripts / modules
+// Scripts are simple files with code executed in the global scope.
+// Modules are files with code that runs in their own scope, 
+// and they use import and export to share functionality between files.
+
+// Node.js - a runtime invironment that allows you to run JavaScript code on the server instead of a browser.
+
+/*
+CommonJS (CJS)
+A module system used in Node.js before ES Modules.
+Uses require and module.exports.
+Default for Node.js projects unless "type": "module" is set in package.json.
+Hardhat in CJS
+
+ES (ECMAScript) Module (ESM)
+(ECMAScript - the standard specification for JavaScript)
+The modern JavaScript module system.
+Uses import and export.
+Required for frontend apps and modern tooling.
+Enabled in Node.js by setting "type": "module" or using .mjs.
+
+ESM Project
+A project where "type": "module" is set in package.json.
+.js files are treated as ESM by default.
+Requires all dependencies to work with import/export.
+
+.json
+A data format, often used for configuration (package.json).
+Can be imported in both CJS and ESM, but behaves slightly differently 
+(e.g., sometimes requires --experimental-json-modules in ESM).
+
+.js
+JavaScript file.
+Treated as CJS or ESM depending on the "type" field in package.json.
+
+.ts
+TypeScript file.
+Needs to be compiled to .js before running.
+Can be used with either CJS or ESM depending on project configuration.
+*/
 
