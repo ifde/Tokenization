@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaMask Encryption</title>
+  <script>
+    // Paste the JavaScript functions here
+  </script>
+</head>
+<body>
+  <button id="connect">Connect to MetaMask</button>
+  <button id="encrypt-decrypt">Encrypt/Decrypt Message</button>
+  <script type="module">
+
+    // import { getMetaMaskEncryptionPublicKey, encryptMessage, decryptMessage, performEncryptionDecryption } from "./web3.js";
+/*
+    const connectButton = document.getElementById("connect");
+    const encryptDecryptButton = document.getElementById("encrypt-decrypt");
+
+    let web3;
+    let account;
+
+    connectButton.addEventListener("click", async () => {
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum); // Use MetaMask's provider
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        account = accounts[0];
+        console.log("Connected account:", account);
+      } else {
+        console.error("MetaMask is not installed.");
+      }
+    });
+
+    encryptDecryptButton.addEventListener("click", async () => {
+      if (web3 && account) {
+        await performEncryptionDecryption(web3, account);
+      } else {
+        console.error("Please connect to MetaMask first.");
+      }
+    });
+*/
+  </script>
+  <script src="dist/bundle.js"></script>
+</body>
+</html>

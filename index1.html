@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSA Encryption/Decryption with MetaMask</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+  <script>
+    // Wait for MetaMask to be available
+    if (typeof window.ethereum === "undefined") {
+      alert("Please install MetaMask!");
+    }
+
+    let web3;
+    let account;
+
+    // Initialize Web3 and get the account
+    window.onload = async () => {
+      if (typeof window.ethereum !== "undefined") {
+        web3 = new Web3(window.ethereum);
+        await ethereum.request({ method: "eth_requestAccounts" });
+        account = (await web3.eth.getAccounts())[0];
+        document.getElementById("connectBtn").style.display = "none";
+        document.getElementById("accountInfo").innerText = `Connected account: ${account}`;
+      }
+    };
+
+    // Generate RSA public and private keys using Web Crypto API
+    async function generateRSAKeys() {
+      const keyPair = await window.crypto.subtle.generateKey(
+        {
+          name: "RSA-OAEP",
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([1, 0, 1]),
+          hash: "SHA-256"
+        },
+        true,
+        ["encrypt", "decrypt"]
+      );
+      return keyPair;
+    }
+
+    // Encrypt a message using RSA public key
+    async function encryptRSA(publicKey, data) {
+      const encoder = new TextEncoder();
+      const encodedData = encoder.encode(data);
+      const encryptedData = await window.crypto.subtle.encrypt(
+        { name: "RSA-OAEP" },
+        publicKey,
+        encodedData
+      );
+      return encryptedData;
+    }
+
+    // Decrypt a message using RSA private key
+    async function decryptRSA(privateKey, encryptedData) {
+      const decryptedData = await window.crypto.subtle.decrypt(
+        { name: "RSA-OAEP" },
+        privateKey,
+        encryptedData
+      );
+      const decoder = new TextDecoder();
+      return decoder.decode(decryptedData);
+    }
+
+    // Request public key hash from MetaMask to store in a transaction
+    async function storePublicKeyHash(publicKey) {
+      const publicKeyHash = web3.utils.sha3(publicKey); // Hash the public key
+      const transaction = {
+        to: account,
+        value: "0", // No Ether is being sent, only data
+        data: web3.utils.toHex(publicKeyHash)
+      };
+
+      // Sign the transaction with MetaMask using the account's private key
+      const signedTx = await window.ethereum.request({
+        method: "eth_signTransaction",
+        params: [transaction, account]
+      });
+      console.log(`\n\n\n signedTx: ${signedTx}`);
+
+      // Send the signed transaction to the network
+      const sentTx = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      return sentTx.transactionHash; // Return the transaction ID
+    }
+
+    // Main function to simulate encryption and decryption flow
+    async function runEncryptionFlow() {
+      // Generate RSA key pair
+      const keyPair = await generateRSAKeys();
+
+      // Get the public key
+      const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+      const publicKeyPem = arrayBufferToPem(publicKey);
+      console.log("Public Key (PEM):", publicKeyPem);
+
+      // Store public key hash on blockchain using MetaMask signing
+      const txId = await storePublicKeyHash(publicKeyPem);
+      console.log("Transaction ID:", txId);
+      document.getElementById("txInfo").innerText = `Public Key Hash stored in transaction: ${txId}`;
+
+      // Encrypt a message
+      const message = "This is a secret message!";
+      const encryptedMessage = await encryptRSA(keyPair.publicKey, message);
+      console.log("Encrypted Message:", encryptedMessage);
+
+      // Decrypt the message using the private key
+      const decryptedMessage = await decryptRSA(keyPair.privateKey, encryptedMessage);
+      console.log("Decrypted Message:", decryptedMessage);
+      document.getElementById("result").innerText = `Decrypted Message: ${decryptedMessage}`;
+    }
+
+    // Utility to convert ArrayBuffer to PEM format
+    function arrayBufferToPem(arrayBuffer) {
+      const binary = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+      const base64 = window.btoa(binary);
+      return `-----BEGIN PUBLIC KEY-----\n${base64.match(/.{1,64}/g).join("\n")}\n-----END PUBLIC KEY-----`;
+    }
+  </script>
+</head>
+<body>
+  <h1>RSA Encryption and Decryption with MetaMask</h1>
+  <div id="accountInfo"></div>
+  <button id="connectBtn" style="display: block;" onclick="window.ethereum.request({ method: 'eth_requestAccounts' })">
+    Connect to MetaMask
+  </button>
+  <hr />
+  <button id="startBtn">Start Encryption Flow</button>
+  <p id="txInfo"></p>
+  <p id="result"></p>
+  <script>
+  // Event listeners
+    document.getElementById("startBtn").addEventListener("click", runEncryptionFlow);
+  </script> 
+</body>
+</html>

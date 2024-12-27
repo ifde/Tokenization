@@ -10,12 +10,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@metamask/eth-sig-util": "^8.1.2",
+    "browserify": "^17.0.1",
     "dotenv": "^16.4.7",
+    "ethereumjs-util": "^7.1.5",
     "express": "^4.21.2",
+    "http-server": "^14.1.1",
     "ipfs-http-client": "^60.0.1",
-    "thirdweb": "^5.80.0"
+    "thirdweb": "^5.80.0",
+    "web3": "^4.16.0"
   },
-  "type": "module",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",

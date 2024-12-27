@@ -238,3 +238,11 @@ Needs to be compiled to .js before running.
 Can be used with either CJS or ESM depending on project configuration.
 */
 
+
+/*
+var: Function-scoped, can be re-declared, and is hoisted. Avoid using it due to potential bugs.
+let: Block-scoped, cannot be re-declared in the same scope, and is safer for mutable variables.
+const: Block-scoped, cannot be re-assigned after initialization, used for constants.
+*/
+
+// yarn add web3

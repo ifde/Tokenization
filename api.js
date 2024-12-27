@@ -23,9 +23,9 @@ const signer = new ethers.Wallet(LOCAL_PRIVATE_KEY, provider);
 const fitnessContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
 // Endpoint to store JSON file and save IPFS hash in contract
-app.post("/store", async (req, res) => {
+app.post("/store/:userId", async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         console.log("User ID:", userId);
 
         // Assume JSON file is sent as a base64 string in the request
@@ -93,11 +93,11 @@ app.delete("/clear/:userId", async (req, res) => {
 });
 
 // Endpoint to delete a specific entry for a user
-app.delete("/delete", async (req, res) => {
+app.delete("/delete/:userId/:index", async (req, res) => {
     try {
-        const { userId, index } = req.body;
+        const { userId, index } = req.params;
 
-        const tx = await fitnessContract.deleteFitnessData(userId, index);
+        const tx = await fitnessContract.deleteUserFitnessData(userId, index);
         await tx.wait();
 
         res.json({ success: true, message: `Entry at index ${index} for user ${userId} deleted.` });
@@ -108,11 +108,12 @@ app.delete("/delete", async (req, res) => {
 });
 
 // Endpoint to update a specific entry for a user
-app.put("/update", async (req, res) => {
+app.put("/update/:userId/:index", async (req, res) => {
     try {
-        const { userId, index, newIpfsHash } = req.body;
+        const { userId, index } = req.params;
+        const { newIpfsHash } = req.body;
 
-        const tx = await fitnessContract.updateFitnessData(userId, index, newIpfsHash);
+        const tx = await fitnessContract.updateUserFitnessData(userId, index, newIpfsHash);
         await tx.wait();
 
         res.json({ success: true, message: `Entry at index ${index} for user ${userId} updated.` });

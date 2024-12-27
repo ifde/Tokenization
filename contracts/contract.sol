@@ -11,6 +11,8 @@ contract FitnessDataStorage {
     mapping(string => FitnessData[]) private userFitnessData;
 
     event DataAdded(string userId, string ipfsHash, uint256 timestamp);
+    event DataDeleted(string userId, uint256 index);
+    event DataUpdated(string userId, uint256 index, string newIpfsHash);
 
     // Function to store fitness data
     function storeFitnessData(string memory userId, string memory ipfsHash) public {
@@ -41,11 +43,33 @@ contract FitnessDataStorage {
     delete userFitnessData[userId];
     }
 
+    // Function to delete a specific entry from userFitnessData
+    function deleteUserFitnessData(string memory userId, uint256 index) public {
+        require(index < userFitnessData[userId].length, "Invalid index");
+
+        // Shift the elements to remove the entry at the specified index
+        for (uint i = index; i < userFitnessData[userId].length - 1; i++) {
+            userFitnessData[userId][i] = userFitnessData[userId][i + 1];
+        }
+        userFitnessData[userId].pop(); // Remove the last element
+
+        emit DataDeleted(userId, index);
+    }
+
+    // Function to update a specific entry in userFitnessData
+    function updateUserFitnessData(string memory userId, uint256 index, string memory newIpfsHash) public {
+        require(index < userFitnessData[userId].length, "Invalid index");
+        require(bytes(newIpfsHash).length > 0, "New IPFS hash cannot be empty");
+
+        // Update the entry at the specified index
+        userFitnessData[userId][index].ipfsHash = newIpfsHash;
+        userFitnessData[userId][index].timestamp = block.timestamp; // Update timestamp
+
+        emit DataUpdated(userId, index, newIpfsHash);
+    }
+
+    // Test function
     function hello() public pure returns (string memory) {
         return "Hello, Hardhat!";
     }
 }
-
-// Deploy with 
-// Locally: npx hardhat run scripts/Deploy.js --network localhost
-// Globally: npx hardhat run scripts/Deploy.ts --network bscTestnet 
