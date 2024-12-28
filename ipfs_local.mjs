@@ -268,3 +268,10 @@ const: Block-scoped, cannot be re-assigned after initialization, used for consta
 // .json() - a method that parses the JSON response of a fetch request
 // JSON.Parse() - a built-in JavaScript function that is used to parse 
 // a JSON-formatted string into a JavaScript object.
+
+// git status                     # Check the current status
+// git branch dev                 # Create a new branch 'dev'
+// git checkout dev            # Switch to a new branch 'dev'
+// git add .                      # Stage all changes
+// git commit -m "Commit message" # Commit the changes
+// git checkout main     
