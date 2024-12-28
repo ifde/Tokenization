@@ -1,12 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  entry: './test1.js', // Your entry file
+  entry: './main.js', // Your entry file
   output: {
-    filename: 'bundle1.js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  devtool: 'source-map', // Enable source maps
+  // devtool: 'source-map', - that is for a better debugging
   module: {
     rules: [
       {
