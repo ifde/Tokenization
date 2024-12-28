@@ -254,3 +254,17 @@ const: Block-scoped, cannot be re-assigned after initialization, used for consta
 // Content delivery network (CDN) - a system of distributed servers that deliver web content to a user 
 // based on the geographic locations of the user, 
 // the origin of the webpage, and a content delivery server.
+
+// Installing a webpack to bundle the JavaScipt file to run in a browser without Node.js
+// yarn add npm install webpack webpack-cli babel-loader @babel/core @babel/preset-env 
+//
+
+// Polyfill - a piece of code that provides modern functionality on 
+// older browsers that do not natively support it.
+
+// Yarn run XXX - runs a script from package.json
+// npx XXX - runs a package from node_modules
+
+// .json() - a method that parses the JSON response of a fetch request
+// JSON.Parse() - a built-in JavaScript function that is used to parse 
+// a JSON-formatted string into a JavaScript object.

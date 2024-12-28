@@ -4,17 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MetaMask Encryption</title>
-  <script>
-    // Paste the JavaScript functions here
-  </script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/thirdweb@5.80.0/dist/cjs/exports/thirdweb.min.js"></script>  -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ethereumjs-util/7.1.3/ethereumjs-util.min.js"></script> -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="account-info"></div>
   <button id="connect">Connect to MetaMask</button>
-  <input type="file" id="fileInput" />
-  <button id="retrieveButton">Retrieve Image</button>
-  <img id="retrievedImage" alt="Retrieved Image" />
+  <div class="file-options">
+    <input type="file" id="fileInput" accept=".json" />
+    <span>OR</span>
+    <button id="defaultButton">Choose Default</button>
+  </div>
+  <button id="uploadButton" disabled>Upload Data</button>
+  <button id="retrieveButton" disabled>Retrieve Data</button>
+  <progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+  <div id="output">
+    <h3>Data to upload</h3>
+    <pre id="jsonOutput" style="display: none;"></pre>
+    <h3>Retrieved data</h3>
+    <pre id="retrievedOutput" style="display: none;"></pre>
+  </div>
   <script src="dist/bundle1.js"></script>
 </body>
 </html>

@@ -146,8 +146,7 @@ async function handleFileUpload(event) {
 
   await storeDataInContract(account, encryptedHash, encryptedAESKey);
   alert("File uploaded and data stored successfully!");
-  console.log("Account:", account);
-  console.log("Encrypted Hash:", encryptedHash);
+  console.log("Encrypted IPFS Hash:", encryptedHash);
   console.log("Encrypted AES Key:", encryptedAESKey);
 }
 

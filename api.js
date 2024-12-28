@@ -42,7 +42,7 @@ app.post("/store/:userId", async (req, res) => {
         console.log("IPFS Hash:", ipfsHash);
 
         // Store IPFS hash in smart contract
-        const tx = await fitnessContract.storeFitnessData(userId, ipfsHash);
+        const tx = await fitnessContract.storeFitnessData(userId, ipfsHash, "0");
         await tx.wait();
 
         res.json({ success: true, ipfsHash });
@@ -59,7 +59,7 @@ app.get("/retrieve/:userId", async (req, res) => {
 
         // Retrieve data from the contract
         const userFitnessData = await fitnessContract.getUserFitnessData(userId);
-        const ipfsHashes = userFitnessData.map(data => data);
+        const ipfsHashes = userFitnessData.map(data => data[0]);
 
         // Fetch JSON from IPFS
         const jsonFiles = await Promise.all(

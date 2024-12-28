@@ -21,6 +21,7 @@
     "dotenv": "^16.4.7",
     "ethereumjs-util": "^7.1.5",
     "express": "^4.21.2",
+    "fs": "^0.0.1-security",
     "http-server": "^14.1.1",
     "https-browserify": "^1.0.0",
     "install": "^0.13.0",
