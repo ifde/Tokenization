@@ -152,27 +152,32 @@ async function handleFileUpload() {
 
   const ipfsHash = await uploadToIPFS(fileContent);
   console.log("Initial IPFS Hash:", ipfsHash);
+  displayValue("Initial IPFS Hash", ipfsHash);
+  updateProgressBar(25);
+
+  
+  
   const { encryptedHash, encryptionKey } = encryptIPFSHash(ipfsHash);
   console.log("Initial AES Key:", encryptionKey);
+
+  displayValue("Initial AES Key", encryptionKey);
+  updateProgressBar(50);
+
+  displayValue("Encrypted IPFS Hash", encryptedHash);
+  updateProgressBar(75);
+
   const publicKey = await getMetaMaskEncryptionPublicKey();
   const encryptedAESKey = encryptMessage(publicKey, encryptionKey);
+
+  displayValue("Encrypted AES Key", encryptedAESKey);
 
   const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
   const account = accounts[0];
 
-  // Show progress bar
-  const progressBar = document.getElementById("progressBar");
-  progressBar.style.display = "block";
-  progressBar.value = 0;
-
   const tx = await fitnessContract.storeFitnessData(account, encryptedHash, encryptedAESKey);
   await tx.wait();
 
-  // Update progress bar
-  progressBar.value = 100;
-  setTimeout(() => {
-    progressBar.style.display = "none";
-  }, 1000);
+  updateProgressBar(100);
 
   alert("File uploaded and data stored successfully!");
   console.log("Encrypted IPFS Hash:", encryptedHash);
@@ -193,14 +198,47 @@ async function retrieveAndDecryptData() {
   const { ipfsHash, encryptedAESKey } = userFitnessData.at(-1); // To change: iterate through all users
   const decryptedAESKey = await decryptMessage(encryptedAESKey);
   console.log("Decrypted AES Key:", decryptedAESKey);
+  displayValue("Decrypted AES Key", decryptedAESKey);
+  
   const decryptedIPFSHash = CryptoJS.AES.decrypt(ipfsHash, decryptedAESKey).toString(CryptoJS.enc.Utf8);
   console.log("Decrypted IPFS Hash:", decryptedIPFSHash);
+  displayValue("Decrypted IPFS Hash", decryptedIPFSHash);
+
   const fileContent = await retrieveFromIPFS(decryptedIPFSHash);
 
   console.log("Retrieved File Content:", fileContent);
 
   // Display JSON content
   displayJson(fileContent, "retrievedOutput");
+}
+
+// Display value in a specified element
+function displayValue(label, value) {
+  const uploadValues = document.getElementById("uploadValues");
+  const valueElement = document.createElement("div");
+  valueElement.textContent = `----------\n${label}: ${value}\n`;
+  uploadValues.appendChild(valueElement);
+  uploadValues.style.display = "inline-block";
+}
+
+// Hide values
+function hideValues() {
+  document.getElementById("uploadValues").style.display = "none";
+  document.getElementById("uploadValues").innerHTML = "";
+  document.getElementById("retrieveValues").style.display = "none";
+  document.getElementById("retrieveValues").innerHTML = "";
+}
+
+// Update progress bar
+function updateProgressBar(value) {
+  const progressBar = document.getElementById("progressBar");
+  progressBar.style.display = "block";
+  progressBar.value = value;
+  if (value === 100) {
+    setTimeout(() => {
+      progressBar.style.display = "none";
+    }, 1000);
+  }
 }
 
 // Event listeners
@@ -217,6 +255,15 @@ connectButton.addEventListener("click", async () => {
     const account = accounts[0];
     console.log("Connected account:", account);
     document.getElementById("account-info").textContent = `Connected account: ${account}`;
+
+    // Reset all fields and buttons
+    document.getElementById("fileInput").value = "";
+    document.getElementById("uploadButton").disabled = true;
+    document.getElementById("retrieveButton").disabled = true;
+    document.getElementById("jsonOutput").style.display = "none";
+    document.getElementById("retrievedOutput").style.display = "none";
+    hideValues();
+    updateProgressBar(0);
   } else {
     console.error("MetaMask is not installed.");
   }
