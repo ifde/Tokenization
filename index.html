@@ -7,40 +7,14 @@
   <script>
     // Paste the JavaScript functions here
   </script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/thirdweb@5.80.0/dist/cjs/exports/thirdweb.min.js"></script>  -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ethereumjs-util/7.1.3/ethereumjs-util.min.js"></script> -->
 </head>
 <body>
   <button id="connect">Connect to MetaMask</button>
-  <button id="encrypt-decrypt">Encrypt/Decrypt Message</button>
-  <script type="module">
-
-    // import { getMetaMaskEncryptionPublicKey, encryptMessage, decryptMessage, performEncryptionDecryption } from "./web3.js";
-/*
-    const connectButton = document.getElementById("connect");
-    const encryptDecryptButton = document.getElementById("encrypt-decrypt");
-
-    let web3;
-    let account;
-
-    connectButton.addEventListener("click", async () => {
-      if (window.ethereum) {
-        web3 = new Web3(window.ethereum); // Use MetaMask's provider
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        account = accounts[0];
-        console.log("Connected account:", account);
-      } else {
-        console.error("MetaMask is not installed.");
-      }
-    });
-
-    encryptDecryptButton.addEventListener("click", async () => {
-      if (web3 && account) {
-        await performEncryptionDecryption(web3, account);
-      } else {
-        console.error("Please connect to MetaMask first.");
-      }
-    });
-*/
-  </script>
-  <script src="dist/bundle.js"></script>
+  <input type="file" id="fileInput" />
+  <button id="retrieveButton">Retrieve Image</button>
+  <img id="retrievedImage" alt="Retrieved Image" />
+  <script src="dist/bundle1.js"></script>
 </body>
 </html>

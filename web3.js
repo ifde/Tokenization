@@ -2,17 +2,16 @@
 // npx browserify web3.js -o dist/bundle.js
 // Then run the code
 
-
-const sigUtil = require('@metamask/eth-sig-util')
-const Buffer = require('buffer/').Buffer
+const sigUtil = require('@metamask/eth-sig-util');
+const Buffer = require('buffer/').Buffer;
 
 let account;
 
 // Get public key from MetaMask
 async function getMetaMaskEncryptionPublicKey() {
   try {
-    const provider = window.ethereum
-    const accounts = await provider.enable()
+    const provider = window.ethereum;
+    const accounts = await provider.enable();
     account = accounts[0];
     // Use the MetaMask provider directly to call `eth_getEncryptionPublicKey`
     const publicKey = await provider.request({

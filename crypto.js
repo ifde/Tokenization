@@ -81,19 +81,25 @@ async function getMetaMaskPublicKey() {
 
 // Function to encrypt AES key using MetaMask public key
 async function encryptAESKeyWithMetaMask(publicKey, aesKey) {
-    const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+    const encoder = new TextEncoder();
+    const encodedKey = encoder.encode(aesKey); // Encode AES key as bytes
 
-  // Generate a keccak256 hash combining the AES key and public address
-  const encryptedAESKey = web3.utils.keccak256(aesKey + publicKey);
-  
-  return encryptedAESKey;
+    // Encrypt AES key using the public key
+    const encryptedAESKey = await window.crypto.subtle.encrypt(
+        {
+            name: "RSA-OAEP",
+        },
+        publicKey, // CryptoKey object representing the public key
+        encodedKey
+    );
+
+    return encryptedAESKey;
 }
 
 // Function to decrypt AES key using MetaMask private key
 async function decryptAESKeyWithMetaMaskPrivateKey(encryptedAESKey) {
     if (typeof window.ethereum !== "undefined") {
         try {
-            const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
             // Request user to unlock MetaMask account
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             const account = accounts[0];

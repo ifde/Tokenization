@@ -246,3 +246,11 @@ const: Block-scoped, cannot be re-assigned after initialization, used for consta
 */
 
 // yarn add web3
+
+// yarn add http-server
+// npx http-server
+// This is used to start a local web server
+
+// Content delivery network (CDN) - a system of distributed servers that deliver web content to a user 
+// based on the geographic locations of the user, 
+// the origin of the webpage, and a content delivery server.
