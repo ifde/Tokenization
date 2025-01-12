@@ -51,6 +51,22 @@ async function getMetaMaskEncryptionPublicKey() {
   }
 }
 
+answer = (function transformEntry(source) {
+  const timestamp = Number(source.imp_date_of_birth);
+  const duration = new SimpleDuration(timestamp);
+  return duration.getByFormat('Y-m-d');
+})(source);
+
+
+(function runTransformScript(source, map, log, target /*undefined onStart*/) {
+  const firstName = source.imp_first_name.toLowerCase();
+  const lastName = source.imp_last_name.toUpperCase();
+  target.username = `${firstName}.${lastName}`;
+})(source, map, log, target);
+  
+
+
+
 // Encrypt message
 function encryptMessage(publicKey, message) {
   try {
