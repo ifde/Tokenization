@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './main.js', // Your entry file
@@ -6,6 +7,11 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [
+    new Dotenv({
+      path: './.env',
+    }), // Automatically loads .env variables
+  ],
   // devtool: 'source-map', - that is for a better debugging
   module: {
     rules: [

@@ -18,15 +18,13 @@ import { upload, download } from "thirdweb/storage";
 import { createThirdwebClient } from "thirdweb";
 const CryptoJS = require("crypto-js");
 
-const CONTRACT_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 const CONTRACT_ABI = [{"type":"event","anonymous":false,"name":"DataAdded","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"string","name":"ipfsHash","indexed":false},{"type":"string","name":"encryptedAESKey","indexed":false},{"type":"uint256","name":"timestamp"}]},{"type":"event","anonymous":false,"name":"DataDeleted","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false}]},{"type":"event","anonymous":false,"name":"DataUpdated","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false},{"type":"string","name":"newIpfsHash","indexed":false},{"type":"string","name":"newEncryptedAESKey","indexed":false}]},{"type":"function","name":"clearUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[]},{"type":"function","name":"deleteUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"}],"outputs":[]},{"type":"function","name":"getUserFitnessData","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"tuple[]","name":"","components":[{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"},{"type":"uint256","name":"timestamp"}]}]},{"type":"function","name":"hello","constant":true,"stateMutability":"pure","payable":false,"inputs":[],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"storeFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"}],"outputs":[]},{"type":"function","name":"updateUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"},{"type":"string","name":"newIpfsHash"},{"type":"string","name":"newEncryptedAESKey"}],"outputs":[]}];
-const WALLET_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
-
+const WALLET_PRIVATE_KEY = process.env.LOCAL_PRIVATE_KEY;
 
 let provider = window.ethereum;
 let fitnessContract;
-const client = createThirdwebClient({ clientId: "3f7ea9dbfcdc8079c39087ed3a4ebfd0" });
+const client = createThirdwebClient({ clientId: process.env.THIRDWEB_CLIENT_ID });
 
 // Initialize the provider and contract
 async function init() {
@@ -50,22 +48,6 @@ async function getMetaMaskEncryptionPublicKey() {
     throw error;
   }
 }
-
-answer = (function transformEntry(source) {
-  const timestamp = Number(source.imp_date_of_birth);
-  const duration = new SimpleDuration(timestamp);
-  return duration.getByFormat('Y-m-d');
-})(source);
-
-
-(function runTransformScript(source, map, log, target /*undefined onStart*/) {
-  const firstName = source.imp_first_name.toLowerCase();
-  const lastName = source.imp_last_name.toUpperCase();
-  target.username = `${firstName}.${lastName}`;
-})(source, map, log, target);
-  
-
-
 
 // Encrypt message
 function encryptMessage(publicKey, message) {
