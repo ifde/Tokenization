@@ -8,8 +8,10 @@ contract FitnessDataStorage {
         uint256 timestamp; // When the data was added
     }
 
-    // Mapping to store data by user ID
+    // Mapping to store data by user ID (which is a MetaMask public key)
     mapping(string => FitnessData[]) private userFitnessData;
+
+    string[] private userIds; // Array to keep track of all user IDs
 
     event DataAdded(string userId, string ipfsHash, string encryptedAESKey, uint256 timestamp);
     event DataDeleted(string userId, uint256 index);
@@ -28,14 +30,35 @@ contract FitnessDataStorage {
             timestamp: block.timestamp
         });
 
+        // 0x5fbdb2315678afecb367f032d93f642f64180aa3
+        // 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+
         // Append to the user's data array
         userFitnessData[userId].push(newData);
+
+        // Add userId to userIds array if it's the first time storing data for this user
+        if (userFitnessData[userId].length == 1 && !checkUserExists(userId)) {
+            userIds.push(userId);
+        }
 
         emit DataAdded(userId, ipfsHash, encryptedAESKey, block.timestamp);
     }
 
+    function checkUserExists(string memory userId) public view returns (bool) {
+        for (uint i = 0; i < userIds.length; i++) {
+            if (keccak256(abi.encodePacked(userIds[i])) == keccak256(abi.encodePacked(userId))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function getUserFitnessData(string memory userId) public view returns (FitnessData[] memory) {
         return userFitnessData[userId];
+    }
+
+    function listAllUsers() public view returns (string[] memory) {
+        return userIds;
     }
 
     function clearUserFitnessData(string memory userId) public {

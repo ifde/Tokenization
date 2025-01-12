@@ -16,10 +16,11 @@ const sigUtil = require('@metamask/eth-sig-util');
 import { ethers } from "ethers";
 import { upload, download } from "thirdweb/storage";
 import { createThirdwebClient } from "thirdweb";
+// import { clear } from 'console';
 const CryptoJS = require("crypto-js");
 
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const CONTRACT_ABI = [{"type":"event","anonymous":false,"name":"DataAdded","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"string","name":"ipfsHash","indexed":false},{"type":"string","name":"encryptedAESKey","indexed":false},{"type":"uint256","name":"timestamp"}]},{"type":"event","anonymous":false,"name":"DataDeleted","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false}]},{"type":"event","anonymous":false,"name":"DataUpdated","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false},{"type":"string","name":"newIpfsHash","indexed":false},{"type":"string","name":"newEncryptedAESKey","indexed":false}]},{"type":"function","name":"clearUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[]},{"type":"function","name":"deleteUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"}],"outputs":[]},{"type":"function","name":"getUserFitnessData","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"tuple[]","name":"","components":[{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"},{"type":"uint256","name":"timestamp"}]}]},{"type":"function","name":"hello","constant":true,"stateMutability":"pure","payable":false,"inputs":[],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"storeFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"}],"outputs":[]},{"type":"function","name":"updateUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"},{"type":"string","name":"newIpfsHash"},{"type":"string","name":"newEncryptedAESKey"}],"outputs":[]}];
+const CONTRACT_ABI = [{"type":"event","anonymous":false,"name":"DataAdded","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"string","name":"ipfsHash","indexed":false},{"type":"string","name":"encryptedAESKey","indexed":false},{"type":"uint256","name":"timestamp","indexed":false}]},{"type":"event","anonymous":false,"name":"DataDeleted","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false}]},{"type":"event","anonymous":false,"name":"DataUpdated","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false},{"type":"string","name":"newIpfsHash","indexed":false},{"type":"string","name":"newEncryptedAESKey","indexed":false}]},{"type":"function","name":"checkUserExists","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"bool","name":""}]},{"type":"function","name":"clearUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[]},{"type":"function","name":"deleteUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"}],"outputs":[]},{"type":"function","name":"getUserFitnessData","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"tuple[]","name":"","components":[{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"},{"type":"uint256","name":"timestamp"}]}]},{"type":"function","name":"hello","constant":true,"stateMutability":"pure","payable":false,"inputs":[],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"listAllUsers","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"string[]","name":""}]},{"type":"function","name":"storeFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"}],"outputs":[]},{"type":"function","name":"updateUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"},{"type":"string","name":"newIpfsHash"},{"type":"string","name":"newEncryptedAESKey"}],"outputs":[]}];
 const WALLET_PRIVATE_KEY = process.env.LOCAL_PRIVATE_KEY;
 
 let provider = window.ethereum;
@@ -156,6 +157,10 @@ async function handleFileUpload() {
   const jsonOutput = document.getElementById("jsonOutput");
   const fileContent = JSON.parse(jsonOutput.textContent);
 
+  displayValue("", ""); // empty the JSON input field
+  displayJson("", "retrievedOutput"); //empty the JSON output field
+
+
   const ipfsHash = await uploadToIPFS(fileContent);
   console.log("Initial IPFS Hash:", ipfsHash);
   displayValue("Initial IPFS Hash", ipfsHash);
@@ -201,6 +206,16 @@ async function retrieveAndDecryptData() {
   console.log("Account to retrieve from:", account);
 
   const userFitnessData = await fitnessContract.getUserFitnessData(account);
+
+  // Convert Proxy object to a plain JavaScript object
+  const plainUserFitnessData = userFitnessData.map(data => ({
+    ipfsHash: data.ipfsHash,
+    encryptedAESKey: data.encryptedAESKey,
+    timestamp: data.timestamp.toString() // Convert BigNumber to string if necessary
+  }));
+
+  console.log("User Fitness Data:", JSON.stringify(plainUserFitnessData, null, 2));
+
   const { ipfsHash, encryptedAESKey } = userFitnessData.at(-1); // To change: iterate through all users
   const decryptedAESKey = await decryptMessage(encryptedAESKey);
   console.log("Decrypted AES Key:", decryptedAESKey);
@@ -221,6 +236,11 @@ async function retrieveAndDecryptData() {
 // Display value in a specified element
 function displayValue(label, value) {
   const uploadValues = document.getElementById("uploadValues");
+  if (!value || !label) {
+    uploadValues.innerHTML = "";
+    return;
+  }
+
   const valueElement = document.createElement("div");
   valueElement.textContent = `----------\n${label}: ${value}\n`;
   uploadValues.appendChild(valueElement);
@@ -247,11 +267,57 @@ function updateProgressBar(value) {
   }
 }
 
+async function listAllUsers() {
+  const users = await fitnessContract.listAllUsers();
+
+  let userIds = "";
+  /*for (let i = 0; i < users.length; i++) {
+    userIds += `User ${i + 1}: ${users[i]}\n`;
+  }*/
+
+  let allUsersStringData = "";
+  for (let i = 0; i < users.length; i++) {
+    console.log(`User ${i + 1}: ${users[i]}`);
+
+    const userFitnessData = await fitnessContract.getUserFitnessData(users[i]);
+
+    // Convert Proxy object to a plain JavaScript object
+    const plainUserFitnessData = userFitnessData.map(data => ({
+      ipfsHash: data.ipfsHash,
+      encryptedAESKey: data.encryptedAESKey,
+      timestamp: data.timestamp.toString() // Convert BigNumber to string if necessary
+    }));
+
+    allUsersStringData += `User #${i + 1} Fitness Data (with MetaMask public key ${users[i]}):\n` + JSON.stringify(plainUserFitnessData, null, 2) + "\n";
+  
+    console.log(`User ${i + 1} Fitness Data:`, JSON.stringify(plainUserFitnessData, null, 2));
+  }
+
+  // console.log("All Users:", JSON.stringify(users, null, 2));
+  // displayJson(users, "allUsersOutput");
+
+  const allUsersOutput = document.getElementById("allUsersOutput");
+  allUsersOutput.textContent = userIds + allUsersStringData;
+  allUsersOutput.style.display = "block";
+}
+
+async function clearUserData() {
+  const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+  const account = accounts[0];
+
+  const tx = await fitnessContract.clearUserFitnessData(account);
+  await tx.wait();
+
+  // alert("User data cleared successfully!");
+}
+
 // Event listeners
 document.getElementById("fileInput").addEventListener("change", handleFileSelection);
 document.getElementById("uploadButton").addEventListener("click", handleFileUpload);
 document.getElementById("defaultButton").addEventListener("click", handleDefaultSelection);
 document.getElementById("retrieveButton").addEventListener("click", retrieveAndDecryptData);
+document.getElementById("listUsersButton").addEventListener("click", listAllUsers);
+document.getElementById("ClearCurrentUserDataButton").addEventListener("click", clearUserData);
 
 const connectButton = document.getElementById("connect");
 
@@ -268,6 +334,7 @@ connectButton.addEventListener("click", async () => {
     document.getElementById("retrieveButton").disabled = true;
     document.getElementById("jsonOutput").style.display = "none";
     document.getElementById("retrievedOutput").style.display = "none";
+    document.getElementById("allUsersOutput").style.display = "none";
     hideValues();
     updateProgressBar(0);
   } else {

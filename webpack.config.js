@@ -12,7 +12,7 @@ module.exports = {
       path: './.env',
     }), // Automatically loads .env variables
   ],
-  // devtool: 'source-map', - that is for a better debugging
+  devtool: 'source-map', // For better debugging
   module: {
     rules: [
       {

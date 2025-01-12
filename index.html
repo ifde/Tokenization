@@ -16,6 +16,8 @@
   </div>
   <button id="uploadButton" disabled>Upload Data</button>
   <button id="retrieveButton" disabled>Retrieve Data</button>
+  <button id="listUsersButton">List All Users</button>
+  <button id="ClearCurrentUserDataButton">Clear Current User Data</button>
   <div id="uploadValues" style="display: none;"></div>
   <!-- Just to have a space -->
   <progress id="blank" value="0" max="100" style="display: none;"></progress>
@@ -26,6 +28,8 @@
     <pre id="jsonOutput" style="display: none;"></pre>
     <h3>Retrieved data</h3>
     <pre id="retrievedOutput" style="display: none;"></pre>
+    <h3>All Users</h3>
+    <pre id="allUsersOutput" style="display: none;"></pre>
   </div>
   <!-- Including the bundle file with all the JavaScript code from main.js -->
   <script src="dist/bundle.js"></script>
