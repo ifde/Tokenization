@@ -1,5 +1,24 @@
 # Tokenization
-Term project "Data tokenization". 
+Term project "Data tokenization".  
+Functionality: 
+1. Connect to MetaMask  
+2. Upload user JSON data to IPFS  
+3. Encrypt IPFS Hash from the previous step with AES key  
+4. Ecnrypt AES key with MetaMask public key  
+5. Store encrypted IPFS Hash and AES key on the blockchain  
+6. Retrieve user's encrypted IPFS Hash and AES key from the blockchain  
+7. Decrypt AES key with MetaMask private key  
+8. Decrypt IPFS Hash from the previous step with decrypted AES key  
+9. Retrieve the stored JSON data  
+10. Display all the steps on the page  
+
+Or in a nutshell:  
+1. Connects to MetaMask  
+2. Stores user's JSON data on the blockchain in an encrypted way  
+3. Retirieves user's JSON data from the blockchain and decrypts it  
+
+Here's a quick video to show the funtionality (doesn't have sound):  
+<video controls src="Functionality.mp4" title="Title"></video>
 
 # Local set up guide 
 
