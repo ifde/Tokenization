@@ -4,7 +4,7 @@ require("dotenv").config();
 const { PRIVATE_KEY } = process.env;
 
 module.exports = {
-  solidity: "0.8.18", // or your preferred Solidity version
+  solidity: "0.8.20", // or your preferred Solidity version
   networks: {
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545/",

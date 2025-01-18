@@ -15,7 +15,8 @@ const { ethers } = hardhat;
 
 async function main() {
     // Deploy the contract
-    const FitnessDataStorage = await ethers.getContractFactory("FitnessDataStorage");
+    // const FitnessDataStorage = await ethers.getContractFactory("FitnessDataStorage");
+    const FitnessDataStorage = await ethers.getContractFactory("FitnessDataNFT");
     const fitnessDataStorage = await FitnessDataStorage.deploy();
     const address = await fitnessDataStorage.getAddress();
     console.log("Contract deployed to:", address);
