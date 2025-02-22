@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
+// THIS IS AN OLD VERSION OF THE CONTRACT
 pragma solidity ^0.8.0;
 
+/*
 contract FitnessDataStorage {
     struct FitnessData {
         string ipfsHash; // Encrypted IPFS hash of the JSON data
@@ -101,3 +103,4 @@ contract FitnessDataStorage {
         return "Hello, Hardhat!";
     }
 }
+*/
