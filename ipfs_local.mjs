@@ -278,4 +278,4 @@ const: Block-scoped, cannot be re-assigned after initialization, used for consta
 
 // git push origin dev            # Push changes to the 'dev' branch
 // git remote -v                 # Check remote URLs
-// git remote set-url origin https://ifde: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@github.com/ifde/Tokenization - set a remote URL
+// git remote set-url origin https://ifde:SECRET_GITHUB_TOKEN@github.com/ifde/Tokenization - set a remote URL
