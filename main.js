@@ -16,13 +16,13 @@ const sigUtil = require('@metamask/eth-sig-util');
 import { ethers } from "ethers";
 import { upload, download } from "thirdweb/storage";
 import { createThirdwebClient } from "thirdweb";
-// import { clear } from 'console';
 const CryptoJS = require("crypto-js");
 
-// const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+// const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const CONTRACT_ABI = [{"type":"constructor","stateMutability":"undefined","payable":false,"inputs":[]},{"type":"error","name":"ERC721IncorrectOwner","inputs":[{"type":"address","name":"sender"},{"type":"uint256","name":"tokenId"},{"type":"address","name":"owner"}]},{"type":"error","name":"ERC721InsufficientApproval","inputs":[{"type":"address","name":"operator"},{"type":"uint256","name":"tokenId"}]},{"type":"error","name":"ERC721InvalidApprover","inputs":[{"type":"address","name":"approver"}]},{"type":"error","name":"ERC721InvalidOperator","inputs":[{"type":"address","name":"operator"}]},{"type":"error","name":"ERC721InvalidOwner","inputs":[{"type":"address","name":"owner"}]},{"type":"error","name":"ERC721InvalidReceiver","inputs":[{"type":"address","name":"receiver"}]},{"type":"error","name":"ERC721InvalidSender","inputs":[{"type":"address","name":"sender"}]},{"type":"error","name":"ERC721NonexistentToken","inputs":[{"type":"uint256","name":"tokenId"}]},{"type":"error","name":"OwnableInvalidOwner","inputs":[{"type":"address","name":"owner"}]},{"type":"error","name":"OwnableUnauthorizedAccount","inputs":[{"type":"address","name":"account"}]},{"type":"event","anonymous":false,"name":"Approval","inputs":[{"type":"address","name":"owner","indexed":true},{"type":"address","name":"approved","indexed":true},{"type":"uint256","name":"tokenId","indexed":true}]},{"type":"event","anonymous":false,"name":"ApprovalForAll","inputs":[{"type":"address","name":"owner","indexed":true},{"type":"address","name":"operator","indexed":true},{"type":"bool","name":"approved","indexed":false}]},{"type":"event","anonymous":false,"name":"BatchMetadataUpdate","inputs":[{"type":"uint256","name":"_fromTokenId","indexed":false},{"type":"uint256","name":"_toTokenId","indexed":false}]},{"type":"event","anonymous":false,"name":"DataAdded","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"string","name":"ipfsHash","indexed":false},{"type":"string","name":"encryptedAESKey","indexed":false},{"type":"uint256","name":"timestamp","indexed":false}]},{"type":"event","anonymous":false,"name":"DataDeleted","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false}]},{"type":"event","anonymous":false,"name":"DataUpdated","inputs":[{"type":"string","name":"userId","indexed":false},{"type":"uint256","name":"index","indexed":false},{"type":"string","name":"newIpfsHash","indexed":false},{"type":"string","name":"newEncryptedAESKey","indexed":false}]},{"type":"event","anonymous":false,"name":"MetadataUpdate","inputs":[{"type":"uint256","name":"_tokenId","indexed":false}]},{"type":"event","anonymous":false,"name":"OwnershipTransferred","inputs":[{"type":"address","name":"previousOwner","indexed":true},{"type":"address","name":"newOwner","indexed":true}]},{"type":"event","anonymous":false,"name":"Transfer","inputs":[{"type":"address","name":"from","indexed":true},{"type":"address","name":"to","indexed":true},{"type":"uint256","name":"tokenId","indexed":true}]},{"type":"function","name":"approve","constant":false,"payable":false,"inputs":[{"type":"address","name":"to"},{"type":"uint256","name":"tokenId"}],"outputs":[]},{"type":"function","name":"balanceOf","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"address","name":"owner"}],"outputs":[{"type":"uint256","name":""}]},{"type":"function","name":"checkUserExists","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"bool","name":""}]},{"type":"function","name":"clearUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[]},{"type":"function","name":"deleteUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"}],"outputs":[]},{"type":"function","name":"getApproved","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"uint256","name":"tokenId"}],"outputs":[{"type":"address","name":""}]},{"type":"function","name":"getUserFitnessData","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"string","name":"userId"}],"outputs":[{"type":"tuple[]","name":"","components":[{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"},{"type":"uint256","name":"timestamp"}]}]},{"type":"function","name":"isApprovedForAll","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"address","name":"owner"},{"type":"address","name":"operator"}],"outputs":[{"type":"bool","name":""}]},{"type":"function","name":"listAllUsers","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"string[]","name":""}]},{"type":"function","name":"name","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"owner","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"address","name":""}]},{"type":"function","name":"ownerOf","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"uint256","name":"tokenId"}],"outputs":[{"type":"address","name":""}]},{"type":"function","name":"renounceOwnership","constant":false,"payable":false,"inputs":[],"outputs":[]},{"type":"function","name":"safeTransferFrom","constant":false,"payable":false,"inputs":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"tokenId"}],"outputs":[]},{"type":"function","name":"safeTransferFrom","constant":false,"payable":false,"inputs":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"tokenId"},{"type":"bytes","name":"data"}],"outputs":[]},{"type":"function","name":"setApprovalForAll","constant":false,"payable":false,"inputs":[{"type":"address","name":"operator"},{"type":"bool","name":"approved"}],"outputs":[]},{"type":"function","name":"storeFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"string","name":"ipfsHash"},{"type":"string","name":"encryptedAESKey"}],"outputs":[]},{"type":"function","name":"supportsInterface","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"bytes4","name":"interfaceId"}],"outputs":[{"type":"bool","name":""}]},{"type":"function","name":"symbol","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"tokenURI","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"uint256","name":"tokenId"}],"outputs":[{"type":"string","name":""}]},{"type":"function","name":"transferFrom","constant":false,"payable":false,"inputs":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"tokenId"}],"outputs":[]},{"type":"function","name":"transferOwnership","constant":false,"payable":false,"inputs":[{"type":"address","name":"newOwner"}],"outputs":[]},{"type":"function","name":"updateUserFitnessData","constant":false,"payable":false,"inputs":[{"type":"string","name":"userId"},{"type":"uint256","name":"index"},{"type":"string","name":"newIpfsHash"},{"type":"string","name":"newEncryptedAESKey"}],"outputs":[]}];
 const WALLET_PRIVATE_KEY = process.env.LOCAL_PRIVATE_KEY;
+// const WALLET_PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 let provider = window.ethereum;
 let fitnessContract;
@@ -35,7 +35,7 @@ async function init() {
   fitnessContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 }
 
-// Get public key from MetaMask
+// Get a public key from MetaMask
 async function getMetaMaskEncryptionPublicKey() {
   try {
     const accounts = await provider.enable();
@@ -51,7 +51,8 @@ async function getMetaMaskEncryptionPublicKey() {
   }
 }
 
-// Encrypt message
+// Encrypt message using MetaMask
+// (assymentric encryption)
 function encryptMessage(publicKey, message) {
   try {
     const buf = Buffer.from(
@@ -71,7 +72,8 @@ function encryptMessage(publicKey, message) {
   }
 }
 
-// Decrypt message
+// Decrypt message using MetaMask
+// (assymentric decryption)
 async function decryptMessage(encryptedMessage) {
   try {
     const provider = window.ethereum;
@@ -102,31 +104,15 @@ async function retrieveFromIPFS(ipfsHash) {
 }
 
 // Encrypt IPFS hash using AES
+// (symmetric encryption)
 function encryptIPFSHash(hash) {
   const key = CryptoJS.lib.WordArray.random(32).toString(CryptoJS.enc.Hex);
   const encrypted = CryptoJS.AES.encrypt(hash, key).toString();
   return { encryptedHash: encrypted, encryptionKey: key };
 }
 
-// Encrypt AES key with MetaMask public key
-async function encryptAESKeyWithMetaMask(publicKey, aesKey) {
-  const encoder = new TextEncoder();
-  const encodedKey = encoder.encode(aesKey);
-  const encryptedAESKey = await window.crypto.subtle.encrypt(
-    { name: "RSA-OAEP" },
-    publicKey,
-    encodedKey
-  );
-  return encryptedAESKey;
-}
-
-// Store data in smart contract
-async function storeDataInContract(userId, encryptedHash, encryptedAESKey) {
-  const tx = await fitnessContract.storeFitnessData(userId, encryptedHash, encryptedAESKey);
-  await tx.wait();
-}
-
 // Handle file selection
+// Used for a button "Choose file"
 async function handleFileSelection(event) {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -142,6 +128,7 @@ async function handleFileSelection(event) {
 }
 
 // Handle default file selection
+// Used for a button "Choose Default"
 async function handleDefaultSelection() {
   const response = await fetch('./fitnessData.json');
   const fileContent = await response.json();
@@ -152,7 +139,7 @@ async function handleDefaultSelection() {
   document.getElementById("updateDataButton").disabled = false;
 }
 
-// Display JSON content in a specified element
+// Display JSON content in a specified element on the page
 function displayJson(content, elementId) {
   const jsonOutput = document.getElementById(elementId);
   jsonOutput.textContent = JSON.stringify(content, null, 2);
@@ -160,6 +147,7 @@ function displayJson(content, elementId) {
 }
 
 // Handle file upload
+// Used for a button "Upload"
 async function handleFileUpload() {
   const jsonOutput = document.getElementById("jsonOutput");
   const fileContent = JSON.parse(jsonOutput.textContent);
@@ -172,8 +160,6 @@ async function handleFileUpload() {
   console.log("Initial IPFS Hash:", ipfsHash);
   displayValue("Initial IPFS Hash", ipfsHash);
   updateProgressBar(25);
-
-  
   
   const { encryptedHash, encryptionKey } = encryptIPFSHash(ipfsHash);
   console.log("Initial AES Key:", encryptionKey);
@@ -207,6 +193,8 @@ async function handleFileUpload() {
 }
 
 // Retrieve and decrypt data
+// Used for a button "Retrieve Data"
+// Retrieves the latest entry
 async function retrieveAndDecryptData() {
   const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
   const account = accounts[0];
@@ -224,9 +212,9 @@ async function retrieveAndDecryptData() {
   
   const network = await provider.getNetwork();
   console.log("Current network:", network);
+  */
 
   const userFitnessData = await fitnessContract.getUserFitnessData(account);
-  */
   
   console.log("User Fitness Data:", userFitnessData);
 
@@ -257,6 +245,7 @@ async function retrieveAndDecryptData() {
 }
 
 // Handle Updaing an entry
+// Used for a button "Update Data Entry"
 async function updateEntryFromJsonFile() {
 
   // Prompt the user to enter the entry number
@@ -344,6 +333,8 @@ function updateProgressBar(value) {
   }
 }
 
+// List all users
+// Used for a button "List All Users"
 async function listAllUsers() {
   const users = await fitnessContract.listAllUsers();
 
@@ -378,14 +369,14 @@ async function listAllUsers() {
   allUsersOutput.style.display = "block";
 }
 
+// Clear user data
+// Used for a button "Clear Current User Data"
 async function clearUserData() {
   const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
   const account = accounts[0];
 
   const tx = await fitnessContract.clearUserFitnessData(account);
   await tx.wait();
-
-  // alert("User data cleared successfully!");
 }
 
 // Event listeners
@@ -399,6 +390,8 @@ document.getElementById("updateDataButton").addEventListener("click", updateEntr
 
 const connectButton = document.getElementById("connect");
 
+// Connect to MetaMask
+// Used for a button "Connect to MetaMask"
 connectButton.addEventListener("click", async () => {
   if (window.ethereum) {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });

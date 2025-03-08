@@ -8,7 +8,7 @@ Run: npx hardhat run scripts/Deploy.ts --network bscTestnet to deploy on a testN
 
 // Deploy with 
 // Locally: npx hardhat run scripts/Deploy.js --network localhost
-// Globally: npx hardhat run scripts/Deploy.ts --network bscTestnet 
+// Globally: npx hardhat run scripts/Deploy.js --network bscTestnet 
 
 import hardhat from "hardhat";
 const { ethers } = hardhat;

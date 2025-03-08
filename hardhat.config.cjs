@@ -1,7 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-const { PRIVATE_KEY } = window.process.env;
+const { PRIVATE_KEY } = process.env;
 
 module.exports = {
   solidity: "0.8.20", // or your preferred Solidity version
