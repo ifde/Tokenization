@@ -390,6 +390,27 @@ document.getElementById("updateDataButton").addEventListener("click", updateEntr
 
 const connectButton = document.getElementById("connect");
 
+async function ConnectAccount() {
+  if (window.ethereum) {
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    const account = accounts[0];
+    console.log("Connected account:", account);
+    document.getElementById("account-info").textContent = `Connected account: ${account}`;
+
+    // Reset all fields and buttons
+    document.getElementById("fileInput").value = "";
+    document.getElementById("uploadButton").disabled = true;
+    document.getElementById("retrieveButton").disabled = true;
+    document.getElementById("jsonOutput").style.display = "none";
+    document.getElementById("retrievedOutput").style.display = "none";
+    document.getElementById("allUsersOutput").style.display = "none";
+    hideValues();
+    updateProgressBar(0);
+  } else {
+    console.error("MetaMask is not installed.");
+  }
+}
+
 // Connect to MetaMask
 // Used for a button "Connect to MetaMask"
 connectButton.addEventListener("click", async () => {
