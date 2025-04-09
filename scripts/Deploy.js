@@ -1,11 +1,3 @@
-
-/*
-Deployment script.
-Run: "npx hardhat run scripts/Deploy.ts --network localhost" to deploy locally 
-(don't forget "npx hardhat node" before that to start a local node)
-Run: npx hardhat run scripts/Deploy.ts --network bscTestnet to deploy on a testNet
-*/
-
 // Deploy with 
 // Locally: npx hardhat run scripts/Deploy.js --network localhost
 // Globally: npx hardhat run scripts/Deploy.js --network bscTestnet 
