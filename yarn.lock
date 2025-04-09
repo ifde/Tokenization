@@ -4992,6 +4992,11 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
+cloc@^2.4.0-cloc:
+  version "2.4.0-cloc"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.4.0-cloc.tgz#d73e598c87c8cca57c391c79ec9e5268b7d9c225"
+  integrity sha512-7SH5scbWgvVkg0LLUsGpCBnUnB9hCvryGFq9uZsMsuOm/JcxDs+6XB/EBuu446MzfCV0K7ydfTxB0bkEEbHHvw==
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/clone-deep/-/clone-deep-4.0.1.tgz#c19fd9bdbbf85942b4fd979c84dcf7d5f07c2387"

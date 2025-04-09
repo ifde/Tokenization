@@ -13,4 +13,3 @@ export let CONTRACT_ABI = [{"type":"event","anonymous":false,"name":"DataAdded",
 // ERC-20 - fungible tokens (can be exchanged for another token of the same type)
 // ERC-721 - non-fungible tokens (unique tokens)
 
-
